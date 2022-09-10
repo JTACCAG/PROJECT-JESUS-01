@@ -39,9 +39,9 @@ export class UserService {
     return postExist;
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
+  async update(updateUserDto: UpdateUserDto) {
     const postExist = await this.usersRepository.findOne({
-      where: { id: id },
+      where: { id: updateUserDto.id },
     });
     if (!postExist) throw new NotFoundException('Este user no existe');
     const updatedPost = Object.assign(postExist, updateUserDto);
@@ -55,6 +55,6 @@ export class UserService {
     });
     if (!postExist) throw new NotFoundException('Este user no existe');
 
-    await this.usersRepository.update(id, { id: id });
+    await this.usersRepository.delete(id);
   }
 }

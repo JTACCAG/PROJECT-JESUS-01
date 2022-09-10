@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, 
+  Delete, UseGuards, Req, Request } from '@nestjs/common';
 import { UserService } from './user.service';
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { FormDataRequest } from 'nestjs-form-data';
 
 @Controller('user')
 export class UserController {
@@ -10,31 +12,34 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
+  @FormDataRequest()
   create(@Body() createUserDto: CreateUserDto) {
+    console.log(createUserDto);
     return this.userService.create(createUserDto);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get()
-  findAll() {
+  @Get('all')
+  findAll(@Req() request: Request) {
     return this.userService.findAll();
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
+  @Get()
+  findOne(@Req() request: Request) {
+    return this.userService.findOne(request['query'].id);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
+  @Patch()
+  @FormDataRequest()
+  update(@Body() updateUserDto: UpdateUserDto) {
+    return this.userService.update(updateUserDto);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+  @Delete()
+  remove(@Req() request: Request) {
+    return this.userService.remove(request['query'].id);
   }
 }
