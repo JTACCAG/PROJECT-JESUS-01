@@ -71,3 +71,44 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+## Run Docker
+These are the steps to be able to run locally:
+### Build and Run
+First:
+```bash
+$ docker build -t nest-cloud-run .
+```
+Second:
+```bash
+$ docker run -p80:3000 nest-cloud-run
+```
+And you can see it at http://localhost or http://localhost:3000.
+To remove it run the following command:
+```bash
+$ docker rm -f $(docker ps -aq)
+```
+
+## Build in Heroku
+To run on heroku you have to download the cli.
+Once downloaded run the following commands:
+### Login
+```bash
+$ heroku login
+```
+### Container Login
+```bash
+$ heroku container:login
+```
+### Create App
+```bash
+$ heroku create
+```
+### Push in App
+```bash
+$ heroku container:push web -a APP_NAME
+```
+### Start App
+```bash
+$ heroku container:release web -a APP_NAME
+```
