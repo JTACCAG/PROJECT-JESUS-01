@@ -8,6 +8,6 @@ import { NestjsFormDataModule } from 'nestjs-form-data';
 @Module({
   imports: [TypeOrmModule.forFeature([User]), NestjsFormDataModule],
   controllers: [UserController],
-  providers: [UserService]
+  providers: [UserService],
 })
 export class UserModule {}

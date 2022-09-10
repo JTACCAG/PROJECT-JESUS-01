@@ -12,8 +12,8 @@ import { jwtConstants } from './constants';
 
 @Module({
   imports: [
-    UserModule, 
-    PassportModule, 
+    UserModule,
+    PassportModule,
     TypeOrmModule.forFeature([User]),
     JwtModule.register({
       secret: jwtConstants.secret,
