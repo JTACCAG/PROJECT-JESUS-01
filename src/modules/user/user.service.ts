@@ -4,31 +4,50 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
-
+import { NotFoundException } from '@nestjs/common';
 @Injectable()
 export class UserService {
-  // constructor(
-  //   @InjectRepository(User)
-  //   private usersRepository: Repository<User>,
-  // ) {}
+  constructor(
+    @InjectRepository(User)
+    private usersRepository: Repository<User>,
+  ) {}
 
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    const newUser = await this.usersRepository.save({
+      email: createUserDto.email,
+      password: createUserDto.password,
+    });
+    return newUser;
   }
 
-  findAll() {
-    return `This action returns all user`;
+  async findAll(): Promise<User[]> {
+    return await this.usersRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: number): Promise<User> {
+    const postExist = await this.usersRepository.findOne({
+      where: { id: id },
+    });
+    if (!postExist) throw new NotFoundException('Este user no existe');
+    return postExist;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    const postExist = await this.usersRepository.findOne({
+      where: { id: id },
+    });
+    if (!postExist) throw new NotFoundException('Este user no existe');
+    const updatedPost = Object.assign(postExist, updateUserDto);
+
+    return await this.usersRepository.save(updatedPost);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: number): Promise<void> {
+    const postExist = await this.usersRepository.findOne({
+      where: { id: id },
+    });
+    if (!postExist) throw new NotFoundException('Este user no existe');
+
+    await this.usersRepository.update(id, { id: id });
   }
 }
