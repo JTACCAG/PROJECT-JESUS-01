@@ -11,10 +11,17 @@ export class UserService {
     @InjectRepository(User)
     private usersRepository: Repository<User>,
   ) {}
+  async findUsername(username: string): Promise<User> {
+    const postExist = await this.usersRepository.findOne({
+      where: { username: username },
+    });
+    if (!postExist) throw new NotFoundException('Este username no existe');
+    return postExist;
+  }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const newUser = await this.usersRepository.save({
-      email: createUserDto.email,
+      username: createUserDto.username,
       password: createUserDto.password,
     });
     return newUser;

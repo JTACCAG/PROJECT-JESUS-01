@@ -13,7 +13,7 @@ import {
     id: number;
   
     @Column({ type: 'varchar', length: 150 })
-    email: string;
+    username: string;
   
     @Column({ type: 'varchar' })
     password: string;
